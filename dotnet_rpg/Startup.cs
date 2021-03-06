@@ -36,7 +36,7 @@ namespace dotnet_rpg
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection(); // turns http requests into https 
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
