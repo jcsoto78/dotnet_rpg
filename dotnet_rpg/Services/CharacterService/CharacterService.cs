@@ -15,17 +15,17 @@ namespace dotnet_rpg.Services.CharacterService
             new Character { Id = 6, Name = "Sam", Class = RpgClass.Mage }
         };
 
-        public bool AddCharacter(Character character)
+        public async Task<bool> AddCharacter(Character character)
         {
             throw new NotImplementedException(); //TODO
         }
 
-        public List<Character> GetAllCharacters()
+        public async Task<List<Character>> GetAllCharacters()
         {
             return MyCharacters.ToList();
         }
 
-        public Character GetCharacterById(int id)
+        public async Task<Character> GetCharacterById(int id)
         {
            return MyCharacters.FirstOrDefault(c => c.Id == id); //returns null if not found
         }

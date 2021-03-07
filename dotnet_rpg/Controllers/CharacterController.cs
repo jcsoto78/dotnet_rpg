@@ -22,15 +22,15 @@ namespace dotnet_rpg.Controllers
         //action methods
 
         [HttpGet("GetAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_characterService.GetAllCharacters());
+            return Ok(await _characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")] // id must go inside curly brackets and match id function parameter
-        public IActionResult GetCharacher(int id)
+        public async Task<IActionResult> GetCharacher(int id)
         {
-            var myCharacter = _characterService.GetCharacterById(id);
+            var myCharacter = await _characterService.GetCharacterById(id);
 
             if (myCharacter != null)
             {
