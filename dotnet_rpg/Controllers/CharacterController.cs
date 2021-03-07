@@ -1,4 +1,5 @@
 ﻿using dotnet_rpg.Models;
+using dotnet_rpg.Services.CharacterService;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,29 +12,29 @@ namespace dotnet_rpg.Controllers
     [Route("[Controller]")] //routes by controller name matching
     public class CharacterController : ControllerBase
     {
-        //adding some mock up data
-        private static readonly List<Character> MyCharacters = new List<Character> {
-            new Character(),
-            new Character { Id = 1, Name = "Rolf", Class = RpgClass.Fighter },
-            new Character { Id = 6, Name = "Sam", Class = RpgClass.Mage }
-        };
+        private readonly ICharacterService _characterService;
+
+        public CharacterController(ICharacterService characterService)
+        {
+            _characterService = characterService;
+        }
 
         //action methods
 
         [HttpGet("GetAll")]
-        public IActionResult GetMock()
+        public IActionResult GetAll()
         {
-            return Ok(MyCharacters);
+            return Ok(_characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")] // id must go inside curly brackets and match id function parameter
         public IActionResult GetCharacher(int id)
         {
-            var myCharacter = MyCharacters.FirstOrDefault(c => c.Id == id);
+            var myCharacter = _characterService.GetCharacterById(id);
 
             if (myCharacter != null)
             {
-                return Ok(MyCharacters.FirstOrDefault(c => c.Id == id));
+                return Ok(myCharacter);
             }
 
             return BadRequest();
