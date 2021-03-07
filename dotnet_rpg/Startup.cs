@@ -28,6 +28,7 @@ namespace dotnet_rpg
         {
             services.AddControllers();
             services.AddScoped<ICharacterService,CharacterService>(); //Dependency Injection
+            services.AddAutoMapper(typeof(Startup)); //adding automapper
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

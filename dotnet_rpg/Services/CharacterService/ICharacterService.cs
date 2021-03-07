@@ -1,4 +1,5 @@
-﻿using dotnet_rpg.Models;
+﻿using dotnet_rpg.Dtos.Character;
+using dotnet_rpg.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace dotnet_rpg.Services.CharacterService
 {
     public interface ICharacterService
     {
-        Task<List<Character>> GetAllCharacters();
+        Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters();
 
-        Task<Character> GetCharacterById(int id);
+        Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id);
 
-        Task<bool> AddCharacter(Character character);
+        Task<ServiceResponse<bool>> AddCharacter(Character character); //TODO 
     }
 }
