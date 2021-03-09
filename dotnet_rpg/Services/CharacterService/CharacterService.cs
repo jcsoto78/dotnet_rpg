@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using dotnet_rpg.Data;
 using dotnet_rpg.Dtos.Character;
 using dotnet_rpg.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +20,36 @@ namespace dotnet_rpg.Services.CharacterService
         };
 
         private readonly IMapper _mapper;
+        private readonly DataContext _context;
 
-        public CharacterService(IMapper mapper)
+        public CharacterService(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
+            _context = context;
         }
 
-        public async Task<ServiceResponse<bool>> AddCharacter(Character character)
+        public async Task<ServiceResponse<GetCharacterDto>> AddCharacter(AddCharacterDto newCharacter)
         {
-            //throw new NotImplementedException(); //TODO
+            var serviceResponse = new ServiceResponse<GetCharacterDto>();
 
-            return new ServiceResponse<bool>() { Data = true};
+            try
+            {
+                await _context.Characters.AddAsync(_mapper.Map<Character>(newCharacter));
+
+                await _context.SaveChangesAsync();
+
+                serviceResponse.Data = _mapper.Map<GetCharacterDto>(newCharacter);
+                serviceResponse.Message = "New Character Created";
+            }
+            catch (Exception ex)
+            {
+
+                serviceResponse.Message = $"Error Adding new Character : {ex}";
+                serviceResponse.Success = false;
+            }
+
+            return serviceResponse;
+            
         }
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
@@ -36,8 +57,8 @@ namespace dotnet_rpg.Services.CharacterService
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
 
             //serviceResponse.Data = (List<GetCharacterDto>)MyCharacters; // TODO use automapper instead
-
-            serviceResponse.Data = (MyCharacters.Select(c => _mapper.Map<GetCharacterDto>(c))).ToList(); // TODO use automapper instead
+            var dbCharacters = await _context.Characters.ToListAsync(); 
+            serviceResponse.Data = (dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c))).ToList();
 
             return serviceResponse;
         }
@@ -45,11 +66,36 @@ namespace dotnet_rpg.Services.CharacterService
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
         {
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
-            //serviceResponse.Data = ((List<GetCharacterDto>)MyCharacters).FirstOrDefault(c => c.Id == id); //use automapper instead
+            //serviceResponse.Data = ((List<GetCharacterDto>)MyCharacters).FirstOrDefault(c => c.Id == id); //DONT DO use automapper instead
 
-            serviceResponse.Data = _mapper.Map<GetCharacterDto>(MyCharacters.FirstOrDefault(c => c.Id == id));
+            serviceResponse.Data = _mapper.Map<GetCharacterDto>(await _context.Characters.FirstOrDefaultAsync(c => c.Id == id));
 
             return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updatedCharacter)
+        {
+            var characterToUpdate = await _context.Characters.FirstOrDefaultAsync(c => c.Id == updatedCharacter.Id);
+            
+            var response = new ServiceResponse<GetCharacterDto>();
+
+            if (characterToUpdate != null)
+            {
+                _mapper.Map(updatedCharacter, characterToUpdate); // uses the same instances for mapping, needed to avoid entity tracker issues
+
+                _context.Characters.Update(characterToUpdate);
+
+                await _context.SaveChangesAsync();
+
+                response.Data = _mapper.Map<GetCharacterDto>(characterToUpdate);
+            }
+            else {
+                response.Data = _mapper.Map<GetCharacterDto>(updatedCharacter);
+                response.Success = false;
+                response.Message = "Cannot update Character";
+            }
+
+            return response;
         }
     }
 }

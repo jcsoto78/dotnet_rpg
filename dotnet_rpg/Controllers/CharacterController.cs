@@ -1,4 +1,5 @@
-﻿using dotnet_rpg.Models;
+﻿using dotnet_rpg.Dtos.Character;
+using dotnet_rpg.Models;
 using dotnet_rpg.Services.CharacterService;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +22,32 @@ namespace dotnet_rpg.Controllers
 
         //action methods
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateCharacter(UpdateCharacterDto updatedCharacter)
+        {
+            var response = await _characterService.UpdateCharacter(updatedCharacter);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCharacter(AddCharacterDto newCharacter)
+        {
+            var response = await _characterService.AddCharacter(newCharacter);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return Conflict(response);
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -32,7 +59,7 @@ namespace dotnet_rpg.Controllers
         {
             var myCharacter = await _characterService.GetCharacterById(id);
 
-            if (myCharacter != null)
+            if (myCharacter.Data != null)
             {
                 return Ok(myCharacter);
             }
