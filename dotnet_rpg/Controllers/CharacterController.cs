@@ -22,6 +22,19 @@ namespace dotnet_rpg.Controllers
 
         //action methods
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCharacter(int id)
+        {
+            var response = await _characterService.DeleteCharacterById(id);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
         [HttpPut]
         public async Task<IActionResult> UpdateCharacter(UpdateCharacterDto updatedCharacter)
         {

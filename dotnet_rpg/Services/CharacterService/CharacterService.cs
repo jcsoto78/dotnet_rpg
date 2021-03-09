@@ -12,13 +12,6 @@ namespace dotnet_rpg.Services.CharacterService
 {
     public class CharacterService : ICharacterService
     {
-        //adding some mock up data
-        private static readonly IList<Character> MyCharacters = new List<Character> {
-            new Character(),
-            new Character { Id = 1, Name = "Rolf", Class = RpgClass.Fighter },
-            new Character { Id = 6, Name = "Sam", Class = RpgClass.Mage }
-        };
-
         private readonly IMapper _mapper;
         private readonly DataContext _context;
 
@@ -50,6 +43,29 @@ namespace dotnet_rpg.Services.CharacterService
 
             return serviceResponse;
             
+        }
+
+        public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacterById(int id)
+        {
+            var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
+
+            try
+            {
+                _context.Characters.Remove(await _context.Characters.FirstOrDefaultAsync(c => c.Id == id));
+
+                await _context.SaveChangesAsync();
+
+                serviceResponse.Data = (_context.Characters.Select(c => _mapper.Map<GetCharacterDto>(c))).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"Cannot delete character: {ex}";
+            }
+
+            return serviceResponse;
+
         }
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
