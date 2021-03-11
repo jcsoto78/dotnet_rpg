@@ -21,5 +21,7 @@ namespace dotnet_rpg.Models
 
         public RpgClass Class { get; set; } = RpgClass.Apprentice;
 
+        public User User { get; set; }
+
     }
 }
