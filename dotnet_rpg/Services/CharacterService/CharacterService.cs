@@ -105,7 +105,12 @@ namespace dotnet_rpg.Services.CharacterService
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
             //serviceResponse.Data = ((List<GetCharacterDto>)MyCharacters).FirstOrDefault(c => c.Id == id); //DONT DO use automapper instead
 
-            serviceResponse.Data = _mapper.Map<GetCharacterDto>(await _context.Characters.FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetSecurityUserId()));
+            var character = await _context.Characters
+                    .Include(c => c.Weapon)
+                    .Include(c => c.CharacterSkills).ThenInclude(cs => cs.Skill)
+                    .FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetSecurityUserId());
+            
+            serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
 
             return serviceResponse;
         }

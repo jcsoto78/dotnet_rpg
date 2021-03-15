@@ -27,6 +27,10 @@ namespace dotnet_rpg.Models
 
         public List<CharacterSkill> CharacterSkills { get; set; }
 
+        //adding some properties for fight simulation
+        public int Fights { get; set; }
+        public int Victories { get; set; }
+        public int Defeats { get; set; }
 
     }
 }
