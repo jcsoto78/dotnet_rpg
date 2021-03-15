@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using dotnet_rpg.Dtos.Character;
+using dotnet_rpg.Dtos.Weapon;
 using dotnet_rpg.Models;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ namespace dotnet_rpg
             CreateMap<AddCharacterDto, GetCharacterDto>(); //every possible mapping nees a createMap profile
             CreateMap<UpdateCharacterDto, Character>(); //every possible mapping nees a createMap profile
             CreateMap<UpdateCharacterDto, GetCharacterDto>(); //every possible mapping nees a createMap profile
+            CreateMap<AddWeaponDto, Weapon>(); //every possible mapping nees a createMap profile
+            CreateMap<Weapon, GetWeaponDto>(); //every possible mapping nees a createMap profile
+
         }
 
     }

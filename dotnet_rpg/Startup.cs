@@ -1,5 +1,6 @@
 using dotnet_rpg.Data;
 using dotnet_rpg.Services.CharacterService;
+using dotnet_rpg.Services.WeaponService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,7 @@ namespace dotnet_rpg
             services.AddControllers();
             services.AddScoped<ICharacterService,CharacterService>(); //Dependency Injection
             services.AddScoped<IAuthRepository, AuthRepository>(); //Dependency Injection
+            services.AddScoped<IWeaponService, WeaponService>(); //Dependency Injection
             services.AddAutoMapper(typeof(Startup)); //adding automapper
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

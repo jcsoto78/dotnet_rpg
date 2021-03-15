@@ -1,4 +1,5 @@
-﻿using dotnet_rpg.Models;
+﻿using dotnet_rpg.Dtos.Weapon;
+using dotnet_rpg.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,7 @@ namespace dotnet_rpg.Dtos.Character
         public int Dexterity { get; set; } = 10;
 
         public RpgClass Class { get; set; } = RpgClass.Apprentice;
+
+        public GetWeaponDto Weapon { get; set; }
     }
 }

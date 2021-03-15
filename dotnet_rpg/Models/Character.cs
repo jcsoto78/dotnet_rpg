@@ -23,5 +23,10 @@ namespace dotnet_rpg.Models
 
         public User User { get; set; }
 
+        public Weapon Weapon { get; set; }// 1: 1 relation
+
+        public List<CharacterSkill> CharacterSkills { get; set; }
+
+
     }
 }
