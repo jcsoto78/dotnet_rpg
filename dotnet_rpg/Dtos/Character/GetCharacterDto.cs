@@ -1,4 +1,5 @@
-﻿using dotnet_rpg.Dtos.Weapon;
+﻿using dotnet_rpg.Dtos.Skill;
+using dotnet_rpg.Dtos.Weapon;
 using dotnet_rpg.Models;
 using System;
 using System.Collections.Generic;
@@ -24,5 +25,7 @@ namespace dotnet_rpg.Dtos.Character
         public RpgClass Class { get; set; } = RpgClass.Apprentice;
 
         public GetWeaponDto Weapon { get; set; }
+
+        public List<GetSkillDto> Skills { get; set; }
     }
 }
