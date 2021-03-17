@@ -27,7 +27,10 @@ namespace dotnet_rpg.Services.CharacterService
 
         // User id from Token claims is frequently queried, so lets have a private method for it
         private int GetSecurityUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-        
+
+        private string GetUserRole() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role) ;
+
+
 
         public async Task<ServiceResponse<GetCharacterDto>> AddCharacter(AddCharacterDto newCharacter)
         {
@@ -94,7 +97,10 @@ namespace dotnet_rpg.Services.CharacterService
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
 
             //serviceResponse.Data = (List<GetCharacterDto>)MyCharacters; // DO NOT DO use automapper instead
-            var dbCharacters = await _context.Characters.Where(c => c.User.Id == GetSecurityUserId()).ToListAsync(); 
+            var dbCharacters = GetUserRole().Equals("Admin") ? //role based auth
+                await _context.Characters.ToListAsync() :
+                await _context.Characters.Where(c => c.User.Id == GetSecurityUserId()).ToListAsync(); 
+
             serviceResponse.Data = (dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c))).ToList();
 
             return serviceResponse;

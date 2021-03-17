@@ -24,6 +24,9 @@ namespace dotnet_rpg.Data
         {
             modelBuilder.Entity<CharacterSkill>() // thanks to naming convention, CharacterId, SkillId, EF creates the necessary hasMany relations on fluentApi upon migration
                 .HasKey(cs => new { cs.CharacterId, cs.SkillId });
+
+            modelBuilder.Entity<User>() //defining a default value on code, Role property has a default
+                .Property(user => user.Role).HasDefaultValue("Player");
         }
     }
 }

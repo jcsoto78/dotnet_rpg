@@ -115,7 +115,8 @@ namespace dotnet_rpg.Data
             // claim is info about the user
             var claims = new List<Claim> { 
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role) // adding role 
             };
 
             var key = new SymmetricSecurityKey(
