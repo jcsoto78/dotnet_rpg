@@ -35,5 +35,11 @@ namespace dotnet_rpg.Controllers
         {
             return Ok(await _fightService.Fight(request));
         }
+
+
+        public async Task<IActionResult> GetHighscore() // default action method for GET verb
+        {
+            return Ok(await _fightService.GetHighscore());
+        }
     }
 }

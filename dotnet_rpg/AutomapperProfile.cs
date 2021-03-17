@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using dotnet_rpg.Dtos;
 using dotnet_rpg.Dtos.Character;
 using dotnet_rpg.Dtos.Skill;
 using dotnet_rpg.Dtos.Weapon;
@@ -25,6 +26,8 @@ namespace dotnet_rpg
             CreateMap<Weapon, GetWeaponDto>(); //every possible mapping nees a createMap profile
             CreateMap<Skill, GetSkillDto>(); //every possible mapping nees a createMap profile
             CreateMap<GetSkillDto, Skill>(); //every possible mapping nees a createMap profile
+            CreateMap<Character, HighscoreDto >(); //every possible mapping nees a createMap profile
+
 
         }
 
