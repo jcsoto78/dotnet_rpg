@@ -12,7 +12,30 @@ namespace dotnet_rpg.Controllers
     [Route("[Controller]")] //routes by controller name matching
     public class CodilyController : ControllerBase
     {
-        [HttpPost]
+
+        [HttpPost("Rotate")] //adds /min to controller routing
+        public async Task<IActionResult> RotateArray(RotateArrayRequestDto request)
+        {
+
+            var myTask = new Task<int[]>(() => {
+
+                var rotatedArray = new int[request.arrayOfInts.Length];
+
+                for (int i = 0; i < request.arrayOfInts.Length; i++)
+                {
+                    var rotatedIndex = (i + request.k) % (request.arrayOfInts.Length);
+                    rotatedArray[rotatedIndex] = request.arrayOfInts[i];
+                }
+
+                return rotatedArray;
+            });
+
+            myTask.Start();
+
+            return Ok(await myTask);
+        }
+
+        [HttpPost("Min")] //adds /min to controller routing
         public async Task<IActionResult> MinNotInArray(MinNotInArrayRequestDto request)
         {
             var myHash = new HashSet<int>(request.arrayOfInts);
