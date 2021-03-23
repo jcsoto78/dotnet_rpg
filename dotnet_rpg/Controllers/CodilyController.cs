@@ -13,6 +13,29 @@ namespace dotnet_rpg.Controllers
     public class CodilyController : ControllerBase
     {
 
+        [HttpGet("MinJumps/{x}/{y}/{d}")] //adds /min to controller routing
+        public async Task<IActionResult> MinJumps(int x, int y, int d)
+        {
+            var test = 0;
+
+            var myTask = new Task<int>(() => {
+
+                int cont = 0;
+
+                while (x <= y)
+                {
+                    cont++;
+                    x += d;
+                }
+                
+                return cont;
+            });
+
+            myTask.Start();
+
+            return Ok(await myTask);
+        }
+
         [HttpPost("Rotate")] //adds /min to controller routing
         public async Task<IActionResult> RotateArray(RotateArrayRequestDto request)
         {
