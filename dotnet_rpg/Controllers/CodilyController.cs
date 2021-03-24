@@ -13,11 +13,55 @@ namespace dotnet_rpg.Controllers
     public class CodilyController : ControllerBase
     {
 
+        ////https://app.codility.com/programmers/lessons/15-caterpillar_method/count_triangles/
+
+        [HttpPost("Triplets")] //adds /min to controller routing
+        public async Task<IActionResult> FindTriplets(GetTripletsRequestDto request)
+        {
+            var myTask = new Task<int>(() => {
+
+                int n = request.array.Length;
+
+                Array.Sort(request.array); 
+
+                int[] sortedArray = request.array;
+
+                int pI, qI, rI; // PI is back index of sliding window ''caterpillar, RI is head index
+                int tripletsCount = 0;
+
+                for (int i = 0; i < n - 2; i++) // stops by back index is  
+                {
+                    pI = i; //back
+                    qI = pI + 1;
+                    rI = qI + 1; //header
+
+                    while (rI < n && sortedArray[pI] + sortedArray[qI] > sortedArray[rI])
+                    {
+                        tripletsCount++;
+
+                        if (rI == n-1)
+                        {
+                            qI++;
+                            rI = qI + 1; //header
+                        }
+                        else
+                        {
+                            rI++;
+                        }
+                    }
+                }
+
+                return tripletsCount;
+            });
+
+            myTask.Start();
+
+            return Ok(await myTask);
+        }
+
         [HttpGet("MinJumps/{x}/{y}/{d}")] //adds /min to controller routing
         public async Task<IActionResult> MinJumps(int x, int y, int d)
         {
-            var test = 0;
-
             var myTask = new Task<int>(() => {
 
                 int cont = 0;
