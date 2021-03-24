@@ -13,6 +13,40 @@ namespace dotnet_rpg.Controllers
     public class CodilyController : ControllerBase
     {
 
+        //https://app.codility.com/programmers/lessons/13-fibonacci_numbers/ladder/
+        // sol https://github.com/Mickey0521/Codility/blob/master/Ladder.java
+
+        [HttpPost("Ladder")] //adds /min to controller routing
+        public IActionResult GetLadder(GetLadderRequestDto request)
+        {
+            int L = request.arrayA.Length;
+
+            // determine the "max" for Fibonacci
+            var maxFibValue = request.arrayA.Max();
+
+            int[] fibonacci = new int[maxFibValue + 1]; // plus one for "0"
+
+            // initial setting of Fibonacci (importnat)
+            fibonacci[0] = 1;
+            fibonacci[1] = 1;
+
+            //fibonacci generator without overflow
+            for (int i = 2; i < maxFibValue; i++)
+            {
+                fibonacci[i] = (fibonacci[i - 1] + fibonacci[i - 2]) % (1 << 30); // 1<<30 ++ 2^30 without overflow
+            }
+
+            // to find "results"
+            int[] results = new int[L];
+
+            for (int i = 0; i < L; i++)
+            {
+                results[i] = fibonacci[request.arrayA[i]] % (1 << request.arrayB[i]); // where, "1 << B[i]" means 2^B[i]
+            }
+
+            return Ok(results);
+        }
+
         ////https://app.codility.com/programmers/lessons/15-caterpillar_method/count_triangles/
 
         [HttpPost("Triplets")] //adds /min to controller routing
