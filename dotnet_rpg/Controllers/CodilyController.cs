@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace dotnet_rpg.Controllers
 {
-    [ApiController]
+    [ApiController] // declares this class instaces take Http requests
     [Route("[Controller]")] //routes by controller name matching
     public class CodilyController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace dotnet_rpg.Controllers
         //https://app.codility.com/programmers/lessons/13-fibonacci_numbers/ladder/
         // sol https://github.com/Mickey0521/Codility/blob/master/Ladder.java
 
-        [HttpPost("Ladder")] //adds /min to controller routing
+        [HttpPost("Ladder")]
         public IActionResult GetLadder(GetLadderRequestDto request)
         {
             int L = request.arrayA.Length;
@@ -49,9 +49,14 @@ namespace dotnet_rpg.Controllers
 
         ////https://app.codility.com/programmers/lessons/15-caterpillar_method/count_triangles/
 
-        [HttpPost("Triplets")] //adds /min to controller routing
+        [HttpPost("Triplets")]
         public async Task<IActionResult> FindTriplets(GetTripletsRequestDto request)
         {
+            if (request.array.Length < 3)
+            {
+                return BadRequest($"Input array Length must be at least 3, provided Length : {request.array.Length}");
+            }
+
             var myTask = new Task<int>(() => {
 
                 int n = request.array.Length;
@@ -60,28 +65,32 @@ namespace dotnet_rpg.Controllers
 
                 int[] sortedArray = request.array;
 
-                int pI, qI, rI; // PI is back index of sliding window ''caterpillar, RI is head index
+                int pI =0, qI= pI + 1, rI = qI + 1; // PI is back index of sliding window ''caterpillar, RI is head index
                 int tripletsCount = 0;
-
-                for (int i = 0; i < n - 2; i++) // stops by back index is  
+                                
+                while (pI < n-2) //stops when the window indexes are invalid by +1
                 {
-                    pI = i; //back
-                    qI = pI + 1;
-                    rI = qI + 1; //header
-
-                    while (rI < n && sortedArray[pI] + sortedArray[qI] > sortedArray[rI])
+                    ////since the array is sorted, ri and qi must move forward looking for further cases, else move the sliding window
+                    if (sortedArray[pI] + sortedArray[qI] > sortedArray[rI])
                     {
                         tripletsCount++;
+                    }
 
-                        if (rI == n-1)
-                        {
-                            qI++;
-                            rI = qI + 1; //header
-                        }
-                        else
-                        {
-                            rI++;
-                        }
+                    if (rI < n - 1)
+                    {
+                        //move rI
+                        rI++;
+                    }
+                    else if (qI < n - 2)
+                    {
+                        //move qI
+                        qI++;
+                        rI = qI + 1;
+                    }
+                    else //rI is at [n-1] and qI is at [n-2]
+                    {
+                        //move position indexes window
+                        pI++; qI = pI + 1; rI = qI + 1;
                     }
                 }
 
@@ -93,7 +102,7 @@ namespace dotnet_rpg.Controllers
             return Ok(await myTask);
         }
 
-        [HttpGet("MinJumps/{x}/{y}/{d}")] //adds /min to controller routing
+        [HttpGet("MinJumps/{x}/{y}/{d}")]
         public async Task<IActionResult> MinJumps(int x, int y, int d)
         {
             var myTask = new Task<int>(() => {
@@ -114,7 +123,7 @@ namespace dotnet_rpg.Controllers
             return Ok(await myTask);
         }
 
-        [HttpPost("Rotate")] //adds /min to controller routing
+        [HttpPost("Rotate")] 
         public async Task<IActionResult> RotateArray(RotateArrayRequestDto request)
         {
 
@@ -136,7 +145,7 @@ namespace dotnet_rpg.Controllers
             return Ok(await myTask);
         }
 
-        [HttpPost("Min")] //adds /min to controller routing
+        [HttpPost("Min")] 
         public async Task<IActionResult> MinNotInArray(MinNotInArrayRequestDto request)
         {
             var myHash = new HashSet<int>(request.arrayOfInts);
