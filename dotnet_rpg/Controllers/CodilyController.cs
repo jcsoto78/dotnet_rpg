@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace dotnet_rpg.Controllers
@@ -12,6 +13,40 @@ namespace dotnet_rpg.Controllers
     [Route("[Controller]")] //routes by controller name matching
     public class CodilyController : ControllerBase
     {
+
+        //check this Solution/Images/1
+        [HttpGet("MaxByInserting5/{N}")] //adds /min to controller routing
+        public IActionResult MaxByInserting5(int N)
+        {
+            int k = 5;
+
+            string inputString = "$" + N.ToString().Trim('-');
+
+            int n = inputString.Length;
+
+            int max = -8000;
+
+            var sb = new StringBuilder(inputString);
+
+            for (int i = 0; i < n + 1; i++)
+            {
+                sb.Replace('$', Convert.ToChar(k.ToString()));
+
+                int parsedValue = int.Parse(sb.ToString());
+                int possibleMax = N >= 0 ? parsedValue : parsedValue * -1;
+
+                max = possibleMax > max ? possibleMax : max;
+
+                if (i < n - 1)
+                {
+                    var rightValue = sb[i + 1]; //save right value
+                    sb[i + 1] = '$';
+                    sb[i] = rightValue;
+                }
+            }
+
+            return Ok(max);
+        }
 
         //https://app.codility.com/programmers/lessons/13-fibonacci_numbers/ladder/
         // sol https://github.com/Mickey0521/Codility/blob/master/Ladder.java
