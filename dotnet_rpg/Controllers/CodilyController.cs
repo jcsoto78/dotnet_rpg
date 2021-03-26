@@ -1,5 +1,7 @@
 ﻿using dotnet_rpg.Dtos.Codily;
 using dotnet_rpg.Dtos.Fight;
+using dotnet_rpg.Exceptions;
+using dotnet_rpg.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,13 +13,16 @@ namespace dotnet_rpg.Controllers
 {
     [ApiController] // declares this class instaces take Http requests
     [Route("[Controller]")] //routes by controller name matching
+    [TypeFilter(typeof(ExceptionManagerFilter))] // declares this class is using ExceptionManagerFilter
     public class CodilyController : ControllerBase
     {
 
         //check this Solution/Images/1
-        [HttpGet("MaxByInserting5/{N}")] //adds /min to controller routing
+        [HttpGet("MaxByInserting5/{N}")] 
         public IActionResult MaxByInserting5(int N)
         {
+            throw new AppTypeException("my custom exception");
+
             int k = 5;
 
             string inputString = "$" + N.ToString().Trim('-');
@@ -87,10 +92,10 @@ namespace dotnet_rpg.Controllers
         [HttpPost("Triplets")]
         public async Task<IActionResult> FindTriplets(GetTripletsRequestDto request)
         {
-            if (request.array.Length < 3)
-            {
-                return BadRequest($"Input array Length must be at least 3, provided Length : {request.array.Length}");
-            }
+            //if (request.array.Length < 3)
+            //{
+            //    return BadRequest($"Input array Length must be at least 3, provided Length : {request.array.Length}");
+            //}
 
             var myTask = new Task<int>(() => {
 
